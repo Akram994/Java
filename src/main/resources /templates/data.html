@@ -1,0 +1,65 @@
+<?php
+// সেশন শুরু করা
+session_start();
+
+// "আইডি কার্ড" (সেশন) চেক করা
+// যদি 'loggedin' সেশন না থাকে, অথবা 'true' না হয়
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // ইউজারকে login.php পেজে পাঠিয়ে দিন
+    header('Location: login.php');
+    exit;
+}
+
+// যদি লগইন ঠিক থাকে, তবেই নিচের বাকি HTML কোড দেখাবে
+?>
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>সেভ করা ডেটা</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        h1 { color: #333; }
+        .entry { background: #f4f4f4; margin-bottom: 10px; padding: 10px; border-radius: 5px; word-wrap: break-word; }
+        .entry-list { list-style-type: none; padding: 0; }
+        a { text-decoration: none; color: blue; }
+    </style>
+</head>
+<body>
+    <h1>ফর্ম থেকে আসা সব ডেটা</h1>
+    <p><a href="index.html">ফর্ম পেজে ফিরে যান</a></p>
+
+    <ul class="entry-list">
+<a href="index.html" class="nav-link">ফর্ম পেজে ফিরে যান</a>
+<a href="data.php" class="nav-link">টেক্সট ডেটা দেখুন</a> <a href="uploads.php" class="nav-link">ফাইল দেখুন</a> <a href="change_password.php" class="nav-link" style="background-color: #17a2b8;">পাসওয়ার্ড পরিবর্তন</a>
+
+<a href="logout.php" class="nav-link" style="background-color: #dc3545;">লগআউট</a>
+
+
+        <?php
+        $file_path = "data.txt";
+        
+        if (file_exists($file_path)) {
+            // file() ফাংশনটি ফাইলের প্রতিটি লাইনকে একটি অ্যারে আইটেম হিসেবে পড়ে
+            $entries = file($file_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            
+            // অ্যারেটি উল্টো করে দেওয়া, যাতে নতুন ডেটা আগে দেখা যায়
+            $entries = array_reverse($entries);
+            
+            if (count($entries) > 0) {
+                // প্রতিটি এন্ট্রির জন্য একটি 'li' ট্যাগ দেখানো
+                foreach ($entries as $entry) {
+                    echo "<li class='entry'>" . htmlspecialchars($entry) . "</li>";
+                }
+            } else {
+                echo "<li class='entry'>data.txt ফাইলটি খালি।</li>";
+            }
+        } else {
+            echo "<li class='entry'>data.txt ফাইলটি এখনও তৈরি হয়নি।</li>";
+        }
+        ?>
+    </ul>
+
+</body>
+</html>

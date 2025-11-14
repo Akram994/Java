@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ডেটা এন্ট্রি ফর্ম</title>
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+ <div class="admin-nav">
+        <a href="data.php" class="nav-link">📊 সেভ করা ডেটা দেখুন</a>
+        <a href="uploads.php" class="nav-link">📂 আপলোড দেখুন</a>
+        <a href="login.php" class="nav-link login">🔑 অ্যাডমিন লগইন</a>
+    </div>
+
+    <h3>আপনার তথ্য দিন:</h3>
+
+    <form id="userForm">
+        নাম: <input type="text" name="name" required>
+        <br><br>
+        ইমেল: <input type="email" name="email" required>
+        <br><br>
+
+       <input type="file"
+name="userfile" required>
+
+        <button type="submit">সেভ করুন</button>
+
+<br><br>
+মেসেজ:
+<textarea name="message" rows="4" cols="50"></textarea>
+
+    </form>
+
+    <script src="main.js"></script>
+
+</body>
+</html>

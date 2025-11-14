@@ -1,0 +1,65 @@
+<?php
+// সেশন শুরু করা
+session_start();
+
+// যদি ইউজার ইতোমধ্যেই লগইন করা থাকে, তাকে uploads.php পেজে পাঠিয়ে দিন
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    header('Location: uploads.php');
+    exit;
+}
+?>
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>লগইন করুন</title>
+    <style>
+        body { font-family: sans-serif; display: grid; place-items: center; min-height: 80vh; background: #f9f9f9; }
+        .login-box { background: #fff; border: 1px solid #ddd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input[type="password"] { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
+        button { padding: 10px 15px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .error { color: red; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>অ্যাক্সেস প্রয়োজন</h2>
+
+        <form action="check_login.php" method="post">
+
+<div class="login-box">
+    <h2>অ্যাক্সেস প্রয়োজন</h2>
+    <form action="check_login.php" method="post">
+        <?php
+        if (isset($_GET['error'])) {
+            echo '<p class="error">ভুল ইউজারনেম বা পাসওয়ার্ড!</p>';
+        }
+        ?>
+        
+        <label for="user">ইউজারনেম:</label><br>
+        <input type="text" id="user" name="username" required>
+        <br><br>
+        
+        <label for="pass">পাসওয়ার্ড:</label><br>
+        <input type="password" id="pass" name="password" required>
+        <br><br>
+        
+        <button type="submit">প্রবেশ করুন</button>
+    </form>
+</div>
+
+
+            <?php
+            // যদি check_login.php ভুল পাসওয়ার্ডের কারণে ফেরত পাঠায়
+            if (isset($_GET['error'])) {
+                echo '<p class="error">ভুল পাসওয়ার্ড!</p>';
+            }
+            ?>
+            <label for="pass">পাসওয়ার্ড:</label><br>
+            <input type="password" id="pass" name="password" required>
+            <button type="submit">প্রবেশ করুন</button>
+        </form>
+    </div>
+</body>
+</html>

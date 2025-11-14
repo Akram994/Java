@@ -1,0 +1,122 @@
+<?php
+// সেশন শুরু করা
+session_start();
+
+// "আইডি কার্ড" (সেশন) চেক করা
+// যদি 'loggedin' সেশন না থাকে, অথবা 'true' না হয়
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    // ইউজারকে login.php পেজে পাঠিয়ে দিন
+    header('Location: login.php');
+    exit;
+}
+
+// যদি লগইন ঠিক থাকে, তবেই নিচের বাকি HTML কোড দেখাবে
+?>
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আপলোড হওয়া ফাইল</title>
+    
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            padding: 20px; 
+            line-height: 1.6; 
+            background-color: #f9f9f9;
+        }
+        h1 { 
+            color: #333; 
+            border-bottom: 2px solid #eee; 
+            padding-bottom: 10px;
+        }
+        .file-list { 
+            list-style-type: '📄'; /* ফাইলের ইমোজি */
+            padding-left: 20px; 
+        }
+        .file-entry { 
+            background: #ffffff; 
+            margin-bottom: 10px; 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .file-link {
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: 500;
+            word-wrap: break-word; /* লম্বা ফাইলের নাম ভেঙে দেখাবে */
+        }
+        .file-link:hover {
+            text-decoration: underline;
+        }
+        .nav-link { 
+            display: inline-block;
+            margin-bottom: 20px;
+            margin-right: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>📂 আপলোড হওয়া ফাইল</h1>
+    <a href="index.html" class="nav-link">ফর্ম পেজে ফিরে যান</a>
+    <a href="data.php" class="nav-link">টেক্সট ডেটা দেখুন</a>
+
+    <ul class="file-list">
+<a href="index.html" class="nav-link">ফর্ম পেজে ফিরে যান</a>
+<a href="data.php" class="nav-link">টেক্সট ডেটা দেখুন</a> <a href="uploads.php" class="nav-link">ফাইল দেখুন</a> <a href="change_password.php" class="nav-link" style="background-color: #17a2b8;">পাসওয়ার্ড পরিবর্তন</a>
+
+<a href="logout.php" class="nav-link" style="background-color: #dc3545;">লগআউট</a>
+
+
+        <?php
+        $upload_dir = "uploads/";
+        
+        // ফাইলটি আছে কিনা এবং এটি একটি ফোল্ডার কিনা তা পরীক্ষা করা
+        if (is_dir($upload_dir)) {
+            
+            // scandir() ফাংশন ফোল্ডারের ভেতরের সব ফাইল ও ফোল্ডারের নাম একটি অ্যারে হিসেবে দেয়
+            $files = scandir($upload_dir);
+            
+            // scandir() লিস্টে '.' এবং '..' (বর্তমান ও প্যারেন্ট ফোল্ডার) যোগ করে,
+            // এগুলো আমাদের দরকার নেই, তাই বাদ দিচ্ছি
+            $filtered_files = array_diff($files, array('.', '..'));
+            
+            if (count($filtered_files) > 0) {
+                // অ্যারে উল্টো করে দিচ্ছি, যাতে নতুন আপলোড করা ফাইল আগে দেখা যায়
+                $filtered_files = array_reverse($filtered_files);
+                
+                foreach ($filtered_files as $file) {
+                    // ফাইলের আসল পাথ
+                    $file_path = $upload_dir . $file;
+                    
+                    // নিরাপত্তার জন্য ফাইলের নামে htmlspecialchars ব্যবহার করা
+                    $safe_filename = htmlspecialchars($file);
+                    
+                    echo "<li class='file-entry'>";
+                    // ফাইলটি খোলার জন্য একটি লিঙ্ক তৈরি করা
+                    // target="_blank" লিঙ্কটিকে নতুন ট্যাবে খুলবে
+                    echo "<a href='{$file_path}' target='_blank' class='file-link'>{$safe_filename}</a>";
+                    echo "</li>";
+                }
+            } else {
+                echo "<li class='file-entry'>'uploads' ফোল্ডারটি এখনো খালি।</li>";
+            }
+        } else {
+            echo "<li class='file-entry'>ত্রুটি: 'uploads' ফোল্ডারটি খুঁজে পাওয়া যায়নি।</li>";
+        }
+        ?>
+    </ul>
+
+</body>
+</html>
